@@ -1,5 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+    // --- Hamburger Menu Toggle ---
+    const hamburger = document.querySelector('.hamburger');
+    const navMenu = document.querySelector('.nav-menu') || document.querySelector('.nav-links');
+    if (hamburger && navMenu) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('open');
+            const icon = hamburger.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-xmark');
+        });
+        // Close menu when a link is clicked
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('open');
+                const icon = hamburger.querySelector('i');
+                icon.classList.add('fa-bars');
+                icon.classList.remove('fa-xmark');
+            });
+        });
+    }
+
     // --- Smooth Scrolling for Nav Anchor Links only (Landing Page) ---
     const navLinks = document.querySelectorAll('.nav-menu a[href^="#"], .cta-btn[href^="#"], .nav-btn-outline[href^="#"]');
     navLinks.forEach(anchor => {
