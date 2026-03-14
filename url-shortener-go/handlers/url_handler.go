@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"context"
 	"crypto/rand"
 	"math/big"
 	"net/http"
@@ -12,6 +13,8 @@ import (
 	"url-shortener-go/models"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
@@ -42,7 +45,7 @@ func ShortenURL(c *gin.Context) {
 	}
 
 	var shortCode string
-	
+
 	customCode := strings.TrimSpace(body.CustomCode)
 	if customCode != "" {
 		// 1. Validation
@@ -50,7 +53,7 @@ func ShortenURL(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Custom keyword must be between 3 and 20 characters"})
 			return
 		}
-		
+
 		matched, _ := regexp.MatchString(`^[a-zA-Z0-9-]+$`, customCode)
 		if !matched {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "Custom keyword can only contain letters, numbers, and hyphens"})
@@ -58,15 +61,17 @@ func ShortenURL(c *gin.Context) {
 		}
 
 		// 2. Duplicate Check
-		var exists bool
-		err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM urls WHERE short_code = ?)", customCode).Scan(&exists)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error checking keyword"})
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		var existing models.URL
+		err := database.URLsCollection.FindOne(ctx, bson.M{"short_code": customCode}).Decode(&existing)
+		if err == nil {
+			c.JSON(http.StatusConflict, gin.H{"error": "This keyword is already taken"})
 			return
 		}
-		
-		if exists {
-			c.JSON(http.StatusConflict, gin.H{"error": "This keyword is already taken"})
+		if err != mongo.ErrNoDocuments {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Database error checking keyword"})
 			return
 		}
 
@@ -81,15 +86,14 @@ func ShortenURL(c *gin.Context) {
 		CreatedAt: time.Now(),
 	}
 
-	query := `INSERT INTO urls (long_url, short_code, created_at) VALUES (?, ?, ?)`
-	result, err := database.DB.Exec(query, url.LongURL, url.ShortCode, url.CreatedAt)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	_, err := database.URLsCollection.InsertOne(ctx, url)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save URL"})
 		return
 	}
-
-	id, _ := result.LastInsertId()
-	url.ID = int(id)
 
 	// Build the public base URL
 	baseURL := getPublicBaseURL(c)
@@ -112,4 +116,3 @@ func getPublicBaseURL(c *gin.Context) string {
 	}
 	return scheme + "://" + host
 }
-

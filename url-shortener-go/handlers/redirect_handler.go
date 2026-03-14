@@ -1,14 +1,17 @@
 package handlers
 
 import (
-	"database/sql"
+	"context"
 	"net/http"
 	"strings"
 	"time"
 
 	"url-shortener-go/database"
+	"url-shortener-go/models"
 
 	"github.com/gin-gonic/gin"
+	"go.mongodb.org/mongo-driver/v2/bson"
+	"go.mongodb.org/mongo-driver/v2/mongo"
 )
 
 func getDeviceType(userAgent string) string {
@@ -24,12 +27,14 @@ func getDeviceType(userAgent string) string {
 func RedirectURL(c *gin.Context) {
 	shortCode := c.Param("code")
 
-	var longURL string
-	query := `SELECT long_url FROM urls WHERE short_code = ?`
-	err := database.DB.QueryRow(query, shortCode).Scan(&longURL)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	var url models.URL
+	err := database.URLsCollection.FindOne(ctx, bson.M{"short_code": shortCode}).Decode(&url)
 
 	if err != nil {
-		if err == sql.ErrNoRows {
+		if err == mongo.ErrNoDocuments {
 			c.JSON(http.StatusNotFound, gin.H{"error": "URL not found"})
 			return
 		}
@@ -43,9 +48,17 @@ func RedirectURL(c *gin.Context) {
 	deviceType := getDeviceType(userAgent)
 
 	go func() {
-		insertClickQuery := `INSERT INTO clicks (short_code, ip_address, device_type, clicked_at) VALUES (?, ?, ?, ?)`
-		_, _ = database.DB.Exec(insertClickQuery, shortCode, ipAddress, deviceType, time.Now())
+		clickCtx, clickCancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer clickCancel()
+
+		click := models.Click{
+			ShortCode:  shortCode,
+			IPAddress:  ipAddress,
+			DeviceType: deviceType,
+			ClickedAt:  time.Now(),
+		}
+		_, _ = database.ClicksCollection.InsertOne(clickCtx, click)
 	}()
 
-	c.Redirect(http.StatusFound, longURL)
+	c.Redirect(http.StatusFound, url.LongURL)
 }

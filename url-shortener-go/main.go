@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"os"
+	"os/signal"
+	"syscall"
 
 	"url-shortener-go/database"
 	"url-shortener-go/routes"
@@ -11,8 +13,8 @@ import (
 )
 
 func main() {
-	// Initialize database
-	database.InitDB()
+	// Connect to MongoDB
+	database.ConnectMongo()
 
 	// Initialize Gin router
 	router := gin.Default()
@@ -28,6 +30,16 @@ func main() {
 	if port == "" {
 		port = "8080"
 	}
+
+	// Graceful shutdown to disconnect MongoDB
+	go func() {
+		quit := make(chan os.Signal, 1)
+		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+		<-quit
+		log.Println("Shutting down... disconnecting MongoDB")
+		database.DisconnectMongo()
+		os.Exit(0)
+	}()
 
 	// Start server
 	log.Printf("Server running on http://localhost:%s\n", port)
