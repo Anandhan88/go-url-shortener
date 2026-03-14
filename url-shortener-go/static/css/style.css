@@ -252,46 +252,6 @@ input[type="url"]:focus, input[type="text"]:focus {
     border: 1px solid var(--border);
 }
 
-.result-details {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    background: var(--bg-color);
-    padding: 1rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-}
-
-.result-detail-item {
-    margin-bottom: 0.5rem;
-}
-
-.result-detail-item:last-child {
-    margin-bottom: 0;
-}
-
-.truncate-url {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.result-keyword-badge {
-    font-family: monospace;
-    background: var(--border);
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    color: var(--primary);
-}
-
-.result-long-url-link {
-    color: var(--secondary-btn);
-    text-decoration: none;
-}
-
-.result-long-url-link:hover {
-    text-decoration: underline;
-}
-
 .short-link-display {
     font-size: 1.125rem;
     font-weight: 600;
