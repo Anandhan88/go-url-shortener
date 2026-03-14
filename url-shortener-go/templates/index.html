@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoURL | Shorten Links & Track Analytics</title>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="landing-page">
+
+    <!-- 1. NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <i class="fa-solid fa-link"></i> GoURL
+            </a>
+            <div class="nav-menu">
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#analytics" class="nav-btn-outline">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. HERO SECTION -->
+    <section id="home" class="hero section-padding">
+        <div class="hero-content">
+            <h1 class="hero-title">Shorten Links. Track Performance.</h1>
+            <p class="hero-subtitle">Create short URLs and analyze click performance with a simple, powerful dashboard built entirely on Golang.</p>
+
+            <div class="hero-card shadow-lg">
+                <div class="input-form-stack">
+                    <div class="input-group">
+                        <input type="url" id="long-url" placeholder="https://your-very-long-url-goes-here.com/article" required>
+                        <button id="shorten-btn" class="primary-btn">
+                            <i class="fa-solid fa-bolt"></i> Generate Short Link
+                        </button>
+                    </div>
+                    <div class="input-group-secondary">
+                        <input type="text" id="custom-keyword" placeholder="Custom keyword (optional)" pattern="[a-zA-Z0-9-]+" title="Letters, numbers, and hyphens only">
+                    </div>
+                </div>
+
+                <div id="result-container" class="hidden result-box">
+                    <p class="result-label">Success! Here is your short link:</p>
+                    <div class="result-row">
+                        <a id="short-url" href="#" target="_blank" class="short-link-display"></a>
+                        <div class="result-actions">
+                            <button id="copy-btn" class="icon-btn" title="Copy to Clipboard">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                            <a id="open-link-btn" href="#" target="_blank" class="icon-btn" title="Open Link">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div id="error-message" class="hidden error-msg mt-3"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. FEATURES SECTION -->
+    <section id="features" class="features section-padding">
+        <div class="container text-center">
+            <h2 class="section-title">Built for Speed and Insight</h2>
+            <p class="section-subtitle">Everything you need to manage your links efficiently.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card shadow-md">
+                    <div class="feature-icon"><i class="fa-solid fa-rocket"></i></div>
+                    <h3>Fast URL Shortening</h3>
+                    <p>Minimal Golang backend architecture ensures your URLs are generated and redirected instantly without delay.</p>
+                </div>
+                <div class="feature-card shadow-md">
+                    <div class="feature-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h3>Real-Time Analytics</h3>
+                    <p>View your link activity up to the exact second. Access total clicks, daily trends, and unique visitor metrics instantly.</p>
+                </div>
+                <div class="feature-card shadow-md">
+                    <div class="feature-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <h3>Device Tracking</h3>
+                    <p>Automatically detect and categorize traffic by device type (Desktop, Tablet, Mobile) to better understand your audience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. HOW IT WORKS SECTION -->
+    <section id="how-it-works" class="how-it-works bg-light section-padding">
+        <div class="container text-center">
+            <h2 class="section-title">How It Works</h2>
+            <p class="section-subtitle">Get started in three simple steps.</p>
+
+            <div class="step-container">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon"><i class="fa-regular fa-paste"></i></div>
+                    <h3>Paste URL</h3>
+                    <p>Drop your long, messy link into the hero generator above.</p>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                    <h3>Generate</h3>
+                    <p>Instantly receive your short, highly shareable 6-character code.</p>
+                </div>
+                <div class="step-line"></div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                    <h3>Track Clicks</h3>
+                    <p>Copy your code to the dashboard and watch your audience interact.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. ANALYTICS DASHBOARD SECTION (Embedded) -->
+    <section id="analytics" class="analytics-dashboard-section section-padding">
+        <div class="container">
+            <h2 class="section-title text-center">Analytics Dashboard</h2>
+            <p class="section-subtitle text-center">Enter your short code to track real-time performance.</p>
+
+            <!-- Search Bar -->
+            <section class="search-card shadow-md">
+                <div class="input-group">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="short-code-input" placeholder="Enter short code or paste full URL (e.g., anand)">
+                    <button id="fetch-analytics-btn" class="primary-btn">View Analytics</button>
+                </div>
+                <div id="analytics-error" class="hidden error-msg mt-3"></div>
+            </section>
+
+            <!-- Analytics Content (Hidden by default) -->
+            <main id="analytics-content" class="hidden">
+                
+                <!-- 4-Card Stats -->
+                <section class="stats-grid">
+                    <div class="stat-card shadow-sm">
+                        <div class="stat-icon"><i class="fa-solid fa-arrow-pointer"></i></div>
+                        <div class="stat-details">
+                            <h3>Total Clicks</h3>
+                            <p id="total-clicks" class="stat-num">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card shadow-sm">
+                        <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+                        <div class="stat-details">
+                            <h3>Unique Visitors</h3>
+                            <p id="unique-visitors" class="stat-num">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card shadow-sm">
+                        <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="stat-details">
+                            <h3>Avg Clicks / Day</h3>
+                            <p id="avg-clicks" class="stat-num">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card shadow-sm">
+                        <div class="stat-icon"><i class="fa-regular fa-clock"></i></div>
+                        <div class="stat-details">
+                            <h3>Days Active</h3>
+                            <p id="days-active" class="stat-num">0</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Charts -->
+                <section class="charts-grid">
+                    <div class="chart-card shadow-sm">
+                        <h3 class="box-title"><i class="fa-solid fa-chart-area"></i> Clicks Over Time</h3>
+                        <div class="canvas-wrapper">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-card shadow-sm">
+                        <h3 class="box-title"><i class="fa-solid fa-chart-pie"></i> Device Types</h3>
+                        <div class="canvas-wrapper">
+                            <canvas id="pieChart"></canvas>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recent Clicks Table -->
+                <section class="table-section shadow-sm">
+                    <h3 class="box-title"><i class="fa-solid fa-clock-rotate-left"></i> Recent Click Activity</h3>
+                    <div class="table-responsive">
+                        <table class="clicks-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>IP Address</th>
+                                    <th>Device Type</th>
+                                </tr>
+                            </thead>
+                            <tbody id="recent-clicks-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </section>
+
+    <!-- 6. CALL TO ACTION SECTION -->
+    <section class="cta-section section-padding text-center">
+        <div class="cta-card shadow-lg">
+            <h2>Start shortening links in seconds.</h2>
+            <p>Join thousands analyzing their link performance the right way.</p>
+            <a href="#home" class="primary-btn btn-large cta-btn">
+                Create Your First Short Link
+            </a>
+        </div>
+    </section>
+
+    <!-- 7. FOOTER -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <i class="fa-solid fa-link"></i> GoURL Project
+            </div>
+            <div class="footer-meta">
+                <span>Built with Golang & Gin</span>
+                <span class="footer-divider">|</span>
+                <a href="#"><i class="fa-brands fa-github"></i> View on GitHub</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2026 GoURL SaaS. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/script.js?v=7"></script>
+</body>
+</html>

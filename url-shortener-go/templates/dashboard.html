@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - GoURL</title>
+    <!-- Use Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for standard icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-body">
+    <!-- Top Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <i class="fa-solid fa-link"></i> GoURL
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/dashboard" class="active">Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper">
+        <header class="dash-header">
+            <div>
+                <h2>Analytics Dashboard</h2>
+                <p class="text-muted">Track the performance of your shortened links in real-time.</p>
+            </div>
+        </header>
+
+        <!-- Search Bar -->
+        <section class="search-card shadow">
+            <div class="input-group">
+                <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                <input type="text" id="short-code-input" placeholder="Enter your 6-character short code (e.g., abc123)">
+                <button id="fetch-analytics-btn" class="primary-btn">View Analytics</button>
+            </div>
+            <div id="analytics-error" class="hidden error-msg mt-3"></div>
+        </section>
+
+        <!-- Analytics Content (Hidden by default) -->
+        <main id="analytics-content" class="hidden">
+            
+            <!-- 4-Card Subgrid -->
+            <section class="stats-grid">
+                <div class="stat-card shadow">
+                    <div class="stat-icon"><i class="fa-solid fa-arrow-pointer"></i></div>
+                    <div class="stat-details">
+                        <h3>Total Clicks</h3>
+                        <p id="total-clicks" class="stat-num">0</p>
+                    </div>
+                </div>
+                <div class="stat-card shadow">
+                    <div class="stat-icon"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="stat-details">
+                        <h3>Unique Visitors</h3>
+                        <p id="unique-visitors" class="stat-num">0</p>
+                    </div>
+                </div>
+                <div class="stat-card shadow">
+                    <div class="stat-icon"><i class="fa-solid fa-chart-line"></i></div>
+                    <div class="stat-details">
+                        <h3>Avg Clicks / Day</h3>
+                        <p id="avg-clicks" class="stat-num">0</p>
+                    </div>
+                </div>
+                <div class="stat-card shadow">
+                    <div class="stat-icon"><i class="fa-regular fa-clock"></i></div>
+                    <div class="stat-details">
+                        <h3>Days Active</h3>
+                        <p id="days-active" class="stat-num">0</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2-Column Chart Layout -->
+            <section class="charts-grid">
+                <div class="chart-box shadow">
+                    <h3 class="box-title">Clicks Over Time</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-box shadow">
+                    <h3 class="box-title">Device Types</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Clicks Table -->
+            <section class="table-section shadow">
+                <h3 class="box-title">Recent Click Activity</h3>
+                <div class="table-responsive">
+                    <table class="clicks-table">
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>IP Address</th>
+                                <th>Device Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recent-clicks-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/script.js"></script>
+</body>
+</html>
