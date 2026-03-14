@@ -92,6 +92,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 shortUrlElem.href = generatedUrl;
                 shortUrlElem.textContent = generatedUrl;
                 
+                // Set keyword and long URL info
+                document.getElementById('result-keyword').textContent = data.short_code;
+                const longUrlElem = document.getElementById('result-long-url');
+                longUrlElem.href = longUrl;
+                longUrlElem.textContent = longUrl;
+                
                 // Set the open link button href
                 const openLinkBtn = document.getElementById('open-link-btn');
                 if (openLinkBtn) {
