@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "modernc.org/sqlite"
 )
@@ -10,8 +11,13 @@ import (
 var DB *sql.DB
 
 func InitDB() {
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "./url_shortener.db"
+	}
+
 	var err error
-	DB, err = sql.Open("sqlite", "./url_shortener.db")
+	DB, err = sql.Open("sqlite", dbPath)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}

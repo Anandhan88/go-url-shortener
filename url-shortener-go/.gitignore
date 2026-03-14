@@ -18,3 +18,8 @@ ngrok.exe
 # OS
 .DS_Store
 Thumbs.db
+
+# Logs
+stderr.txt
+stdout.txt
+

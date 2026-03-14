@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"crypto/rand"
-	"encoding/json"
 	"math/big"
 	"net/http"
 	"regexp"
@@ -101,15 +100,8 @@ func ShortenURL(c *gin.Context) {
 	})
 }
 
-// getPublicBaseURL tries to detect the public ngrok URL first,
-// then falls back to proxy headers, then to the request host.
+// getPublicBaseURL detects the public URL using proxy headers (works with Render, ngrok, etc.)
 func getPublicBaseURL(c *gin.Context) string {
-	// 1. Try ngrok local API
-	if ngrokURL := getNgrokPublicURL(); ngrokURL != "" {
-		return ngrokURL
-	}
-
-	// 2. Fall back to proxy headers
 	scheme := "http"
 	host := c.Request.Host
 	if proto := c.GetHeader("X-Forwarded-Proto"); proto != "" {
@@ -121,26 +113,3 @@ func getPublicBaseURL(c *gin.Context) string {
 	return scheme + "://" + host
 }
 
-func getNgrokPublicURL() string {
-	client := &http.Client{Timeout: 500 * time.Millisecond}
-	resp, err := client.Get("http://127.0.0.1:4040/api/tunnels")
-	if err != nil {
-		return ""
-	}
-	defer resp.Body.Close()
-
-	var result struct {
-		Tunnels []struct {
-			PublicURL string `json:"public_url"`
-		} `json:"tunnels"`
-	}
-
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
-		return ""
-	}
-
-	if len(result.Tunnels) > 0 {
-		return result.Tunnels[0].PublicURL
-	}
-	return ""
-}
