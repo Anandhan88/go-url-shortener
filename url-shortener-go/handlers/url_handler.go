@@ -80,9 +80,14 @@ func ShortenURL(c *gin.Context) {
 		shortCode = generateShortCode()
 	}
 
+	// Build the public base URL
+	baseURL := getPublicBaseURL(c)
+	fullShortURL := baseURL + "/" + shortCode
+
 	url := models.URL{
 		LongURL:   body.LongURL,
 		ShortCode: shortCode,
+		ShortURL:  fullShortURL,
 		CreatedAt: time.Now(),
 	}
 
@@ -95,11 +100,8 @@ func ShortenURL(c *gin.Context) {
 		return
 	}
 
-	// Build the public base URL
-	baseURL := getPublicBaseURL(c)
-
 	c.JSON(http.StatusOK, gin.H{
-		"short_url":  baseURL + "/" + shortCode,
+		"short_url":  fullShortURL,
 		"short_code": shortCode,
 	})
 }
