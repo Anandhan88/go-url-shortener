@@ -26,6 +26,8 @@ func SetupRoutes(router *gin.Engine) {
 		api.GET("/analytics/:code", handlers.GetAnalytics)
 	}
 
+	router.GET("/qr/:code", handlers.GenerateQR)
+
 	// Redirect route (must be last to not catch /dashboard or /api)
 	router.GET("/:code", handlers.RedirectURL)
 }

@@ -98,6 +98,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     openLinkBtn.href = generatedUrl;
                 }
 
+                // Set the QR code image and download link
+                const qrImg = document.getElementById('qr-code-img');
+                const downloadQrBtn = document.getElementById('download-qr-btn');
+                if (qrImg && downloadQrBtn) {
+                    const qrUrl = `/qr/${data.short_code}`;
+                    // We append a timestamp to bust the browser cache in case of reuse
+                    qrImg.src = `${qrUrl}?t=${new Date().getTime()}`;
+                    downloadQrBtn.href = qrUrl;
+                    downloadQrBtn.download = `qrcode-${data.short_code}.png`;
+                }
+
                 resultContainer.classList.remove('hidden');
                 
             } catch (error) {
