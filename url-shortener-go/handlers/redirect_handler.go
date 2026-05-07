@@ -42,6 +42,11 @@ func RedirectURL(c *gin.Context) {
 		return
 	}
 
+	if url.ExpiresAt != nil && url.ExpiresAt.Before(time.Now()) {
+		c.JSON(http.StatusGone, gin.H{"error": "This link has expired"})
+		return
+	}
+
 	// Track Click
 	ipAddress := c.ClientIP()
 	userAgent := c.Request.UserAgent()

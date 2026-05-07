@@ -12,4 +12,5 @@ type URL struct {
 	ShortCode string        `json:"short_code" bson:"short_code"`
 	ShortURL  string        `json:"short_url" bson:"short_url"`
 	CreatedAt time.Time     `json:"created_at" bson:"created_at"`
+	ExpiresAt *time.Time    `json:"expires_at,omitempty" bson:"expires_at,omitempty"`
 }

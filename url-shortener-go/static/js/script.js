@@ -45,11 +45,13 @@ document.addEventListener('DOMContentLoaded', () => {
         shortenBtn.addEventListener('click', async () => {
             const longUrlInput = document.getElementById('long-url');
             const customKeywordInput = document.getElementById('custom-keyword');
+            const expiresInSelect = document.getElementById('expires-in');
             const resultContainer = document.getElementById('result-container');
             const shortUrlElem = document.getElementById('short-url');
             const errorElem = document.getElementById('error-message');
             const longUrl = longUrlInput.value.trim();
             const customCode = customKeywordInput ? customKeywordInput.value.trim() : '';
+            const expiresIn = expiresInSelect ? parseInt(expiresInSelect.value, 10) : 0;
 
             // Reset UI
             resultContainer.classList.add('hidden');
@@ -70,6 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const payload = { long_url: longUrl };
                 if (customCode) {
                     payload.custom_code = customCode;
+                }
+                if (expiresIn > 0) {
+                    payload.expires_in = expiresIn;
                 }
 
                 const response = await fetch('/api/shorten', {

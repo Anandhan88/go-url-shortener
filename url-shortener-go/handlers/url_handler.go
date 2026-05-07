@@ -32,6 +32,7 @@ func ShortenURL(c *gin.Context) {
 	var body struct {
 		LongURL    string `json:"long_url"`
 		CustomCode string `json:"custom_code"`
+		ExpiresIn  int    `json:"expires_in"` // in hours
 	}
 
 	if err := c.BindJSON(&body); err != nil {
@@ -84,11 +85,18 @@ func ShortenURL(c *gin.Context) {
 	baseURL := getPublicBaseURL(c)
 	fullShortURL := baseURL + "/" + shortCode
 
+	var expiresAt *time.Time
+	if body.ExpiresIn > 0 {
+		t := time.Now().Add(time.Duration(body.ExpiresIn) * time.Hour)
+		expiresAt = &t
+	}
+
 	url := models.URL{
 		LongURL:   body.LongURL,
 		ShortCode: shortCode,
 		ShortURL:  fullShortURL,
 		CreatedAt: time.Now(),
+		ExpiresAt: expiresAt,
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
