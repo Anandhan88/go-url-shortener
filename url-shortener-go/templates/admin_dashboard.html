@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - GoURL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background: #dc2626;
+        }
+        .welcome-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .welcome-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .welcome-card h3 {
+            margin-bottom: 0.5rem;
+        }
+        .welcome-card p {
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <i class="fa-solid fa-link"></i> GoURL
+            </a>
+            <div class="nav-links">
+                <a href="/">Home</a>
+                <a href="/dashboard">Analytics</a>
+                <a href="/admin/dashboard" class="active">Admin</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper" style="max-width: 800px; margin: 0 auto; padding-top: 2rem;">
+        <div class="admin-header">
+            <h2>Admin Dashboard</h2>
+            <a href="/admin/logout" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </a>
+        </div>
+
+        <div class="welcome-card">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h3>Welcome to the Admin Panel</h3>
+            <p>You have successfully authenticated. More features can be added here in the future.</p>
+        </div>
+    </div>
+</body>
+</html>

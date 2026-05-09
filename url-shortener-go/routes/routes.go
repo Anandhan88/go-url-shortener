@@ -19,6 +19,20 @@ func SetupRoutes(router *gin.Engine) {
 		c.HTML(200, "dashboard.html", gin.H{})
 	})
 
+	// Admin Routes (Public)
+	router.GET("/admin/login", handlers.AdminLoginPage)
+	router.POST("/admin/login", handlers.AdminLogin)
+	router.GET("/admin/logout", handlers.AdminLogout)
+
+	// Admin Protected Routes
+	admin := router.Group("/admin")
+	admin.Use(handlers.AdminAuthMiddleware())
+	{
+		admin.GET("/dashboard", func(c *gin.Context) {
+			c.HTML(200, "admin_dashboard.html", gin.H{})
+		})
+	}
+
 	// API routes
 	api := router.Group("/api")
 	{
